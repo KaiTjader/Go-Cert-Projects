@@ -5,19 +5,33 @@ import (
 	"time"
 )
 
-func greet(phrase string) {
+func greet(phrase string, doneChan chan bool) {
 	fmt.Println("Hello!", phrase)
+	doneChan <- true
 }
 
-func slowGreet(phrase string) {
+func slowGreet(phrase string, doneChan chan bool) {
 	time.Sleep((3 * time.Second))
-	fmt.Println("Hello!", phrase)
+	fmt.Println("Hellooooo!", phrase)
+	doneChan <- true
+	// close(doneChan)
 }
 
 func main() {
-	// go greet("Nice to meet you")
-	// go greet("How are you?")
+	// allDone := make([]chan bool, 4)
 	done := make(chan bool)
-	go slowGreet(("How... are... you..."))
-	// go greet("post")
+	// done1 := allDone[0]
+	// done2 := allDone[0]
+	// done3 := allDone[0]
+	// done4 := allDone[0]
+	go greet("Nice to meet you", done)
+	go greet("How are you?", done)
+	go slowGreet(("How... are... you..."), done)
+	go greet("post", done)
+	for range done {
+
+	}
+	// for _, done := range allDone {
+	// 	<-done
+	// }
 }
